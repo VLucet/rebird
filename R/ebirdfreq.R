@@ -90,7 +90,7 @@ ebirdfreq <- function(loctype, loc, startyear = 1900,
   
   names(freq) <- c("comName", vapply(month.name, paste, FUN.VALUE = character(4), 
                                      1:4, sep = "-"))
-  print(freq)
+  return(freq)
   
   if (!long) {
     return(freq)
