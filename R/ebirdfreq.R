@@ -90,7 +90,7 @@ ebirdfreq <- function(loctype, loc, startyear = 1900,
   
   names(freq) <- c("comName", vapply(month.name, paste, FUN.VALUE = character(4), 
                                      1:4, sep = "-"))
-  print(names(freq))
+  print(freq)
   
   if (!long) {
     return(freq)
@@ -99,7 +99,7 @@ ebirdfreq <- function(loctype, loc, startyear = 1900,
                          v.names = "frequency", idvar = "comName", 
                          timevar = "monthQt", times = names(freq)[2:49])
     ss <- data.frame(sampleSize = unlist(freq[1, -1]))
-    #ss$monthQt <- rownames(ss)
+    ss$monthQt <- rownames(ss)
     freq_long <- left_join(freq_long, ss, by = "monthQt")
     as_tibble(freq_long)
   }
