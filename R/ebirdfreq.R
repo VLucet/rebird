@@ -40,7 +40,7 @@
 #' @importFrom utils read.delim
 #' @importFrom stats reshape
 #' @importFrom dplyr left_join
-#' @importFrom dplyr tbl_df
+#' @importFrom dplyr as_tibble()
 #' @importFrom httr GET
 #' @importFrom httr stop_for_status
 #' @export
@@ -81,8 +81,8 @@ ebirdfreq <- function(loctype, loc, startyear = 1900,
   ret <- GET(url, query = args, ...)
   stop_for_status(ret)
   asChar <- readBin(ret$content, "character")
-  freq <- tbl_df(read.delim(text = asChar, skip = 12, 
-                            stringsAsFactors = FALSE)[,-50])
+  freq <- as_tibble(read.delim(text = asChar, skip = 12, 
+                               stringsAsFactors = FALSE)[,-50])
   
   if (loctype == "hotspots" && all(is.na(freq[, -1]))) {
     warning("No observations returned, check hotspot code")
@@ -90,6 +90,7 @@ ebirdfreq <- function(loctype, loc, startyear = 1900,
   
   names(freq) <- c("comName", vapply(month.name, paste, FUN.VALUE = character(4), 
                                      1:4, sep = "-"))
+  return(freq)
   
   if (!long) {
     return(freq)
@@ -100,6 +101,6 @@ ebirdfreq <- function(loctype, loc, startyear = 1900,
     ss <- data.frame(sampleSize = unlist(freq[1, -1]))
     ss$monthQt <- rownames(ss)
     freq_long <- left_join(freq_long, ss, by = "monthQt")
-    tbl_df(freq_long)
+    as_tibble(freq_long)
   }
 }
